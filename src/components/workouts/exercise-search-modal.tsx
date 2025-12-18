@@ -28,6 +28,8 @@ export function ExerciseSearchModal({
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
+
+
   const searchUrl = debouncedSearchTerm
     ? `${WGER_API_BASE_URL}/exerciseinfo/?search=${encodeURIComponent(searchTerm)}`
     : `${WGER_API_BASE_URL}/exerciseinfo/`;
