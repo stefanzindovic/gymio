@@ -1,13 +1,21 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useAuthRedirect } from "@/hooks/use-auth-redirect";
+import { ExerciseBrowser } from "@/components/exercises/exercise-browser";
+import { ActivityCalendar } from "@/components/activity/activity-calendar";
+import { MyWorkoutsSection } from "@/components/workouts/my-workouts-section";
+import { FloatingActionButton } from "@/components/ui/floating-action-button";
 
 export default function DashboardPage() {
   const router = useRouter();
   const { user, logout, isLoading } = useAuth();
   const authRedirect = useAuthRedirect({ requireAuth: true, redirectTo: "" });
+  const myWorkoutsSectionRef = useRef<{
+    openCreateModal: () => void;
+  }>(null);
 
   const handleLogout = async () => {
     try {
@@ -16,6 +24,10 @@ export default function DashboardPage() {
     } catch (error) {
       console.error("Logout error:", error);
     }
+  };
+
+  const handleFabClick = () => {
+    myWorkoutsSectionRef.current?.openCreateModal();
   };
 
   if (authRedirect.isLoading) {
@@ -51,33 +63,19 @@ export default function DashboardPage() {
       </nav>
 
       <main className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-lg shadow-sm p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            Welcome to Your Dashboard
-          </h2>
+        <div className="space-y-8">
+          {user?.id && <ActivityCalendar userId={user.id} />}
 
-          <div className="space-y-4">
-            <div>
-              <h3 className="text-sm font-medium text-gray-500">Email</h3>
-              <p className="mt-1 text-lg text-gray-900">{user?.email}</p>
-            </div>
+          <MyWorkoutsSection ref={myWorkoutsSectionRef} />
 
-            <div>
-              <h3 className="text-sm font-medium text-gray-500">User ID</h3>
-              <p className="mt-1 text-lg font-mono text-gray-700">{user?.id}</p>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-medium text-gray-500">Last Sign In</h3>
-              <p className="mt-1 text-lg text-gray-900">
-                {user?.last_sign_in_at
-                  ? new Date(user.last_sign_in_at).toLocaleString()
-                  : "Never"}
-              </p>
-            </div>
-          </div>
+          <ExerciseBrowser />
         </div>
       </main>
+
+      <FloatingActionButton
+        onClick={handleFabClick}
+        ariaLabel="Create new workout"
+      />
     </div>
   );
 }
