@@ -45,7 +45,7 @@ export function ActiveWorkoutModal({
     true
   );
 
-  const cancelMutation = useApiMutation<any, {}, any>(
+  const cancelMutation = useApiMutation<any, {}>(
     "DELETE",
     `/workouts/activity/${workout.workoutActivityId}`,
     true
