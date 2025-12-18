@@ -1,12 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/hooks/use-auth";
 
 export function RegisterForm() {
-  const router = useRouter();
   const { register, isLoading, error } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,7 +45,6 @@ export function RegisterForm() {
 
     try {
       await register({ email, password });
-      router.push("/dashboard");
     } catch (err) {
       if (err instanceof Error) {
         setFormError(err.message);

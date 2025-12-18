@@ -1,7 +1,8 @@
 "use client";
 
-import { ReactNode } from "react";
-import { useAuthRedirect } from "@/hooks/use-auth-redirect";
+import { ReactNode, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/use-auth";
 
 interface RegisterRedirectWrapperProps {
   children: ReactNode;
@@ -10,12 +11,23 @@ interface RegisterRedirectWrapperProps {
 export function RegisterRedirectWrapper({
   children,
 }: RegisterRedirectWrapperProps) {
-  const { isLoading } = useAuthRedirect({
-    requireAuth: false,
-    redirectTo: "/dashboard",
-  });
+  const router = useRouter();
+  const { isAuthenticated, isLoading } = useAuth();
+  const [mounted, setMounted] = useState(false);
 
-  if (isLoading) {
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || isLoading) return;
+
+    if (isAuthenticated) {
+      router.push("/dashboard");
+    }
+  }, [isAuthenticated, isLoading, mounted, router]);
+
+  if (!mounted || isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
