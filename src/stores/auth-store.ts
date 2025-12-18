@@ -33,7 +33,10 @@ export const useAuthStore = create<AuthStore>((set) => ({
   },
 
   setSession: (session) => {
-    set({ session });
+    set({
+      session,
+      isAuthenticated: session !== null
+    });
     syncSessionToLocalStorage(session as AuthSession | null);
   },
 
