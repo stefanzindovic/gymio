@@ -15,6 +15,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const initialize = useAuthStore((state) => state.initialize);
   const setSession = useAuthStore((state) => state.setSession);
   const setUser = useAuthStore((state) => state.setUser);
+  const setLoading = useAuthStore((state) => state.setLoading);
 
   useEffect(() => {
     initializeAuthConfig();
@@ -22,6 +23,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        setLoading(true);
+
         if (session) {
           setSession(session as any);
           const user = await supabase.auth.getUser();
@@ -33,13 +36,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
           setUser(null);
           clearSessionFromLocalStorage();
         }
+
+        setLoading(false);
       }
     );
 
     return () => {
       authListener?.subscription.unsubscribe();
     };
-  }, [initialize, setSession, setUser]);
+  }, [initialize, setSession, setUser, setLoading]);
 
   return <>{children}</>;
 }

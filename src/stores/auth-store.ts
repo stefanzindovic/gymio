@@ -31,16 +31,14 @@ export const useAuthStore = create<AuthStore>((set) => ({
   setUser: (user) => {
     set({
       user,
-      isAuthenticated: user !== null,
-      isLoading: false
+      isAuthenticated: user !== null
     });
   },
 
   setSession: (session) => {
     set({
       session,
-      isAuthenticated: session !== null,
-      isLoading: false
+      isAuthenticated: session !== null
     });
     syncSessionToLocalStorage(session as AuthSession | null);
   },
