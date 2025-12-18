@@ -61,7 +61,7 @@ export const MyWorkoutsSection = forwardRef<
     true
   );
 
-  const deleteWorkoutMutation = useApiMutation<any, {}, any>(
+  const deleteWorkoutMutation = useApiMutation<any, {}>(
     "DELETE",
     "",
     true
